@@ -1,0 +1,11 @@
+.ludo-captions__line::after {
+	content: attr(data-translation);
+	box-sizing: border-box;
+	background-color: black;
+	position: relative;
+	border-radius: 8px;
+	font-size: 75%;
+	opacity: 0.5;
+	padding: 8px;
+	left: 15px;
+}
