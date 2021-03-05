@@ -15,7 +15,11 @@
 			"css": ["styles.css"]
 		}
 	],
+	"options_page": "options.html",
 	"browser_action": {
-		"default_icon": {}
-	}
+		"default_icon": {},
+		"default_popup": "options.html"
+	},
+	"permissions": ["storage"],
+	"content_security_policy": "script-src 'self'"
 }
