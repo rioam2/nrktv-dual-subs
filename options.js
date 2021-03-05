@@ -9,7 +9,7 @@ function forEachSetting(cb) {
 }
 
 // Save settings
-settingsForm.addEventListener('submit', function handleSaveSettings(e) {
+settingsForm.addEventListener('change', function handleSaveSettings(e) {
 	e.preventDefault();
 
 	const newSettings = {};

@@ -75,14 +75,13 @@
 				</select>
 			</div>
 			<div class="field-container">
-				<label for="settings-learn-mode">Learning mode (hold "t" to pause/translate)</label>
-				<input type="checkbox" id="settings-learn-mode" />
+				<label for="settings-mode">Translation Visibility</label>
+				<select id="settings-mode">
+					<option selected value="disabled">Hidden</option>
+					<option value="learning">When holding "T"</option>
+					<option value="enabled">Always Show</option>
+				</select>
 			</div>
-			<div class="field-container">
-				<label for="settings-en">Enable dual-subtitles</label>
-				<input type="checkbox" id="settings-en" />
-			</div>
-			<button type="submit">Save</button>
 		</form>
 		<script src="options.js"></script>
 	</body>

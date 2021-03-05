@@ -92,14 +92,21 @@ const LearningMode = (function () {
 	};
 })();
 
-function handleSettingsUpdate({ en, tl, learnMode }) {
-	if (en) {
-		CaptionObserver.enable();
-		learnMode ? LearningMode.enable() : LearningMode.disable();
-		globalTL = tl;
-	} else {
-		CaptionObserver.disable();
-		LearningMode.disable();
+function handleSettingsUpdate({ tl, mode }) {
+	// Disable by default
+	CaptionObserver.disable();
+	LearningMode.disable();
+	globalTL = tl;
+
+	// Activate specified mode(s)
+	switch (mode) {
+		case 'enabled':
+			CaptionObserver.enable();
+			break;
+		case 'learning':
+			CaptionObserver.enable();
+			LearningMode.enable();
+			break;
 	}
 }
 
@@ -111,9 +118,8 @@ function handleSettingsChanges(changes) {
 		});
 		// Handle changes
 		handleSettingsUpdate({
-			en: settings['settings-en'],
 			tl: settings['settings-tl'],
-			learnMode: settings['settings-learn-mode'],
+			mode: settings['settings-mode'],
 		});
 	});
 }
