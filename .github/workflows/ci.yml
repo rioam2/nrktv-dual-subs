@@ -5,7 +5,7 @@ on:
       - main
 jobs:
   publish:
-    name: Build
+    name: Publish Extension
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -14,7 +14,7 @@ jobs:
         shell: bash
         run: ./bundle.sh
       - name: Publish Extension
-        uses: Klemensas/chrome-extension-upload-action@1.4.1
+        uses: Klemensas/chrome-extension-upload-action
         with:
           refresh-token: ${{ secrets.CHROME_STORE_REFRESH_TOKEN }}
           client-id: ${{ secrets.CHROME_STORE_CLIENT_ID }}
