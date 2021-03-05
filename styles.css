@@ -1,11 +1,13 @@
 .ludo-captions__line::after {
 	content: attr(data-translation);
-	box-sizing: border-box;
-	background-color: black;
+	display: inline-block;
 	position: relative;
-	border-radius: 8px;
-	font-size: 75%;
-	opacity: 0.5;
-	padding: 8px;
-	left: 15px;
+	left: 10px;
+	padding: 0 0.3em;
+	margin: 0.05em 0;
+	line-height: 1.4;
+	background-color: black;
+	-webkit-border-radius: 0.15em;
+	border-radius: 0.15em;
+	opacity: 0.3;
 }
