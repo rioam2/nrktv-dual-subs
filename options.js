@@ -14,7 +14,6 @@ settingsForm.addEventListener('change', function handleSaveSettings(e) {
 
 	const newSettings = {};
 	forEachSetting((node) => {
-		console.log(node);
 		if (node.type === 'checkbox') {
 			newSettings[node.id] = node.checked;
 		} else {
@@ -30,7 +29,6 @@ document.addEventListener('DOMContentLoaded', function () {
 		forEachSetting((node) => {
 			const key = node.id;
 			const value = settings[key];
-			console.log({ key, value });
 			if (value) {
 				if (node.type === 'checkbox') {
 					node.checked = value;

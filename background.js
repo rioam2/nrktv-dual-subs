@@ -32,7 +32,7 @@ function getTranslation(text, source_lang, target_lang) {
 	reqURL += `&sl=${source_lang}&tl=${target_lang}&ie=UTF8&oe=UTF8`;
 
 	// Return request response as a promise
-	const requestTimeoutMs = 1000;
+	const requestTimeoutMs = 3000;
 	return new Promise((resolve, reject) => {
 		// Don't leave promise dangling if request fails
 		const timeoutRejection = setTimeout(() => {

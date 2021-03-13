@@ -66,11 +66,9 @@ const LearningMode = (function () {
 	function keyHandler(e) {
 		if (e.key === 't' && !e.repeat) {
 			if (e.type === 'keydown') {
-				console.log('keydown');
 				setTranslationVisibility(true);
 				setVideoPlayState(false);
 			} else {
-				console.log('keyup');
 				setTranslationVisibility(false);
 				setVideoPlayState(true);
 			}
