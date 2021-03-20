@@ -45,8 +45,13 @@ function getTranslation(text, source_lang, target_lang) {
 		xhr.onreadystatechange = function () {
 			if (xhr.readyState === 4 && xhr.status === 200) {
 				const res = JSON.parse(xhr.responseText);
-				const translation = res.sentences.map((sentence) => sentence.trans).join('');
-				resolve(translation);
+				if (res.sentences && Array.isArray(res.sentences)) {
+					// Undocumented API response schema until March 2021
+					resolve(res.sentences.map((sentence) => sentence.trans).join(''));
+				} else if (Array.isArray(res)) {
+					// Undocumented API response schema as of March 2021+
+					resolve(res.flat(1e9)[0]);
+				}
 				clearTimeout(timeoutRejection);
 			}
 		};
