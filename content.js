@@ -44,17 +44,20 @@ const CaptionObserver = (function (handler) {
 	const throttledHandler = throttle(handler, 50);
 
 	// Listen for captions elements mounting
-	const captionsContainerQuery = '.ludo-captions';
+	const captionsContainerQuery = '*[class^="ludo-captions"]';
 	const captionsObserver = new MutationObserver((mutations) => {
 		mutations.forEach((mutation) => {
-			if (!mutation.addedNodes) return;
-			Array.from(mutation.addedNodes).forEach((node) => {
-				const parent = node.parentElement;
-				const isCaption = parent && parent.matches(captionsContainerQuery);
-				if (isCaption) {
+			Array.from(mutation.addedNodes || [])
+				.filter((node) => node.matches && node.matches(captionsContainerQuery))
+				.forEach((node) => {
+					const parent = node.parentElement;
 					throttledHandler(Array.from(parent.childNodes));
-				}
-			});
+				});
+		});
+		mutations.forEach((mutation) => {
+			Array.from(mutation.removedNodes || [])
+				.filter((node) => node.matches && node.matches(captionsContainerQuery))
+				.forEach((node) => {});
 		});
 	});
 	// Return API interface
