@@ -2,14 +2,25 @@ let globalTL = 'en';
 let globalShowTranslation = true;
 
 // Called for each new caption node mounted to the DOM
-function handleCaptionMount(node) {
-	const text = node.innerText;
+function handleCaptionMount(nodes) {
+	const text = nodes.map((node) => node.innerText.trim()).join(' ');
+	const lineSplits = nodes.reduce((acc, node) => [...acc, acc[acc.length - 1] + node.innerText.split(' ').length], [0]);
+
 	// Handle translation request within service-worker to alleviate CORS/security conflicts
 	const req = { action: 'translate', payload: { text, source_lang: 'no', target_lang: globalTL } };
 	chrome.extension.sendRequest(req, ({ error, response }) => {
 		if (!error) {
-			node.setAttribute('hide-translation', !globalShowTranslation);
-			node.setAttribute('data-translation', response);
+			const translatedLineSplits = lineSplits.map((orig) =>
+				Math.floor(orig * (response.split(' ').length / text.split(' ').length))
+			);
+			Array.from(nodes).forEach((node, lineNum) => {
+				const translatedLine = response
+					.split(' ')
+					.slice(translatedLineSplits[lineNum], translatedLineSplits[lineNum + 1])
+					.join(' ');
+				node.setAttribute('hide-translation', !globalShowTranslation);
+				node.setAttribute('data-translation', translatedLine);
+			});
 		} else {
 			console.error(error);
 		}
@@ -17,6 +28,21 @@ function handleCaptionMount(node) {
 }
 
 const CaptionObserver = (function (handler) {
+	const throttle = (func, limit) => {
+		let inThrottle;
+		return function () {
+			const args = arguments;
+			const context = this;
+			if (!inThrottle) {
+				func.apply(context, args);
+				inThrottle = true;
+				setTimeout(() => (inThrottle = false), limit);
+			}
+		};
+	};
+
+	const throttledHandler = throttle(handler, 50);
+
 	// Listen for captions elements mounting
 	const captionsContainerQuery = '.ludo-captions';
 	const captionsObserver = new MutationObserver((mutations) => {
@@ -26,7 +52,7 @@ const CaptionObserver = (function (handler) {
 				const parent = node.parentElement;
 				const isCaption = parent && parent.matches(captionsContainerQuery);
 				if (isCaption) {
-					handler(node);
+					throttledHandler(Array.from(parent.childNodes));
 				}
 			});
 		});
