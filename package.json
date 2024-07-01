@@ -1,6 +1,6 @@
 {
   "name": "nrktv-dual-subs",
-  "version": "1.1.4",
+  "version": "1.2.0",
   "description": "Provides side-by-side subtitle translations for tv.nrk.no",
   "main": "index.js",
   "type": "module",
