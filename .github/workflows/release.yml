@@ -1,0 +1,63 @@
+name: 'Release'
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  release:
+    name: 'Release'
+    runs-on: 'ubuntu-latest'
+    permissions: 'write-all'
+
+    steps:
+      - uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          release-type: node
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        if: ${{ steps.release.outputs.release_created }}
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
+
+      - name: Setup Node
+        if: ${{ steps.release.outputs.release_created }}
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+
+      - name: Install
+        if: ${{ steps.release.outputs.release_created }}
+        run: pnpm install
+
+      - name: Build project
+        if: ${{ steps.release.outputs.release_created }}
+        run: pnpm build
+
+      - name: Archive build artifacts
+        if: ${{ steps.release.outputs.release_created }}
+        run: |
+          zip -r nrk-dual-subs-chrome.zip .output/chrome-mv3/
+
+      - name: Upload release artifact
+        if: ${{ steps.release.outputs.release_created }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release upload ${{ steps.release.outputs.tag_name }} nrk-dual-subs-chrome.zip
+
+      - name: Publish Extension
+        uses: Klemensas/chrome-extension-upload-action@master
+        with:
+          refresh-token: ${{ secrets.CHROME_STORE_REFRESH_TOKEN }}
+          client-id: ${{ secrets.CHROME_STORE_CLIENT_ID }}
+          client-secret: ${{ secrets.CHROME_STORE_CLIENT_SECRET }}
+          app-id: ${{ secrets.CHROME_STORE_APP_ID }}
+          file-name: './nrk-dual-subs-chrome.zip'
+          publish: true
