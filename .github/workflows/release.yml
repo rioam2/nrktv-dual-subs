@@ -43,7 +43,7 @@ jobs:
       - name: Archive build artifacts
         if: ${{ steps.release.outputs.release_created }}
         run: |
-          zip -r nrk-dual-subs-chrome.zip .output/chrome-mv3/
+          pushd .output/chrome-mv3/ && zip -r ../../nrk-dual-subs-chrome.zip ./* && popd
 
       - name: Upload release artifact
         if: ${{ steps.release.outputs.release_created }}

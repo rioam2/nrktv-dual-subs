@@ -37,7 +37,7 @@ jobs:
 
       - name: Archive build artifacts
         run: |
-          zip -r nrk-dual-subs-chrome.zip .output/chrome-mv3/
+          pushd .output/chrome-mv3/ && zip -r ../../nrk-dual-subs-chrome.zip ./* && popd
 
       - name: Create prerelease
         uses: marvinpinto/action-automatic-releases@v1.2.1
