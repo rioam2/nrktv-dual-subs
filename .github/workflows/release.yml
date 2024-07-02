@@ -18,7 +18,6 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v4
-        if: ${{ steps.release.outputs.release_created }}
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
@@ -26,18 +25,15 @@ jobs:
           version: 8
 
       - name: Setup Node
-        if: ${{ steps.release.outputs.release_created }}
         uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
           cache: 'pnpm'
 
       - name: Install
-        if: ${{ steps.release.outputs.release_created }}
         run: pnpm install
 
       - name: Build project
-        if: ${{ steps.release.outputs.release_created }}
         run: pnpm build
 
       - name: Archive build artifacts
