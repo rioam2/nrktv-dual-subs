@@ -52,12 +52,13 @@ jobs:
         run: |
           gh release upload ${{ steps.release.outputs.tag_name }} nrk-dual-subs-chrome.zip
 
-      - name: Publish Extension
-        uses: Klemensas/chrome-extension-upload-action@master
+      - name: Upload & release
+        if: ${{ steps.release.outputs.release_created }}
+        uses: mnao305/chrome-extension-upload@v5.0.0
         with:
-          refresh-token: ${{ secrets.CHROME_STORE_REFRESH_TOKEN }}
+          file-path: ./nrk-dual-subs-chrome.zip'
+          extension-id: ${{ secrets.CHROME_STORE_APP_ID }}
           client-id: ${{ secrets.CHROME_STORE_CLIENT_ID }}
           client-secret: ${{ secrets.CHROME_STORE_CLIENT_SECRET }}
-          app-id: ${{ secrets.CHROME_STORE_APP_ID }}
-          file-name: './nrk-dual-subs-chrome.zip'
+          refresh-token: ${{ secrets.CHROME_STORE_REFRESH_TOKEN }}
           publish: true
