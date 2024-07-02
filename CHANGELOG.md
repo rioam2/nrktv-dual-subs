@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.2](https://github.com/rioam2/nrktv-dual-subs/compare/v1.2.1...v1.2.2) (2024-07-02)
+
+
+### Bug Fixes
+
+* **ci:** correct extension bundle path ([dbdf585](https://github.com/rioam2/nrktv-dual-subs/commit/dbdf5857dbde195db31d20c9b47f239215fc9e92))
+
 ## [1.2.1](https://github.com/rioam2/nrktv-dual-subs/compare/v1.2.0...v1.2.1) (2024-07-02)
 
 
