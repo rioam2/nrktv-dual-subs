@@ -52,7 +52,7 @@ jobs:
         if: ${{ steps.release.outputs.release_created }}
         uses: mnao305/chrome-extension-upload@v5.0.0
         with:
-          file-path: ./nrk-dual-subs-chrome.zip'
+          file-path: nrk-dual-subs-chrome.zip
           extension-id: ${{ secrets.CHROME_STORE_APP_ID }}
           client-id: ${{ secrets.CHROME_STORE_CLIENT_ID }}
           client-secret: ${{ secrets.CHROME_STORE_CLIENT_SECRET }}
