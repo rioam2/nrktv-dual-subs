@@ -36,16 +36,19 @@ function App() {
         </select>
       </div>
       <div>
-        <label htmlFor="settings-mode">Translated language</label>
+        <label htmlFor="settings-mode">Mode:</label>
         <select id="settings-mode" onChange={handleModeChange}>
           <option selected={mode === TranslateMode.Enabled} value={TranslateMode.Enabled}>
-            Always Show
+            Dual mode
           </option>
           <option selected={mode === TranslateMode.KeyPress} value={TranslateMode.KeyPress}>
             When holding "T"
           </option>
+          <option selected={mode === TranslateMode.OnlyTranslation} value={TranslateMode.OnlyTranslation}>
+            Only translation
+          </option>
           <option selected={mode === TranslateMode.Disabled} value={TranslateMode.Disabled}>
-            Hidden
+            Disabled
           </option>
         </select>
       </div>
