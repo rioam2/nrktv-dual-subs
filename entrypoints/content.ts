@@ -86,7 +86,7 @@ export default defineContentScript({
             video.pause();
             video.focus();
             break;
-          case TranslateMode.OnlyTranslation:
+          case TranslateMode.TranslationOnly:
             hideTranslatedSubtitle();
             video.pause();
             video.focus();
@@ -105,7 +105,7 @@ export default defineContentScript({
             video.play();
             video.focus();
             break;
-          case TranslateMode.OnlyTranslation:
+          case TranslateMode.TranslationOnly:
             hideOriginalSubtitle();
             showTranslatedSubtitle();
             video.play();
@@ -137,7 +137,7 @@ export default defineContentScript({
           if (!activationKeyPressed) hideTranslatedSubtitle();
           break;
         }
-        case TranslateMode.OnlyTranslation: {
+        case TranslateMode.TranslationOnly: {
           hideOriginalSubtitle();
           const translation = await translateSubtitle(subtitle);
           appendTranslatedSubtitle(translation, '100%');

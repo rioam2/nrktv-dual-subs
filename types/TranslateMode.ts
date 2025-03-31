@@ -2,5 +2,5 @@ export enum TranslateMode {
   Enabled = 'enabled',
   Disabled = 'disabled',
   KeyPress = 'keypress',
-  OnlyTranslation = 'only-translation'
+  TranslationOnly = 'translation-only'
 }
