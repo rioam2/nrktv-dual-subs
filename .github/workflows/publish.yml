@@ -37,19 +37,16 @@ jobs:
         run: pnpm build
 
       - name: Archive build artifacts
-        if: ${{ steps.release.outputs.release_created }}
         run: |
           pushd .output/chrome-mv3/ && zip -r ../../nrk-dual-subs-chrome.zip ./* && popd
 
       - name: Upload release artifact
-        if: ${{ steps.release.outputs.release_created }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release upload ${{ steps.release.outputs.tag_name }} nrk-dual-subs-chrome.zip
 
       - name: Upload & release
-        if: ${{ steps.release.outputs.release_created }}
         uses: mnao305/chrome-extension-upload@v5.0.0
         with:
           file-path: nrk-dual-subs-chrome.zip
