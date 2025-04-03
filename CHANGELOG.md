@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.3.0](https://github.com/rioam2/nrktv-dual-subs/compare/v1.2.2...v1.3.0) (2025-04-03)
+
+
+### Features
+
+* add translation-only subtitle mode ([4d83b96](https://github.com/rioam2/nrktv-dual-subs/commit/4d83b96278c1e0c0e30c37d02ec7cdbc7ea5efb2))
+* **modes:** only translations mode ([fe1a13f](https://github.com/rioam2/nrktv-dual-subs/commit/fe1a13face1b03d5b8ee1f033aa2f5846bdf0e97))
+
+
+### Bug Fixes
+
+* **background:** sending message on localhost ([f3388db](https://github.com/rioam2/nrktv-dual-subs/commit/f3388db7057ce19fc431d7620ff688fbfdeea199))
+
 ## [1.2.2](https://github.com/rioam2/nrktv-dual-subs/compare/v1.2.1...v1.2.2) (2024-07-02)
 
 
