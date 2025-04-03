@@ -11,11 +11,6 @@ jobs:
     permissions: 'write-all'
 
     steps:
-      - uses: googleapis/release-please-action@v4
-        id: release
-        with:
-          release-type: node
-
       - name: Checkout
         uses: actions/checkout@v4
 
