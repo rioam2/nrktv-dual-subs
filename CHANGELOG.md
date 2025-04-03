@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.1](https://github.com/rioam2/nrktv-dual-subs/compare/nrktv-dual-subs/v1.4.0...nrktv-dual-subs/v1.4.1) (2025-04-03)
+
+
+### Bug Fixes
+
+* remove unnecessary condition in publish workflow ([1cd549c](https://github.com/rioam2/nrktv-dual-subs/commit/1cd549ccbf29908b91500e55d4bfb50bb02906a9))
+
 ## [1.4.0](https://github.com/rioam2/nrktv-dual-subs/compare/nrktv-dual-subs-v1.3.0...nrktv-dual-subs/v1.4.0) (2025-04-03)
 
 
