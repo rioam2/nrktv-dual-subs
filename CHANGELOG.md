@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.2](https://github.com/rioam2/nrktv-dual-subs/compare/nrktv-dual-subs/v1.4.1...nrktv-dual-subs/v1.4.2) (2025-04-03)
+
+
+### Bug Fixes
+
+* use correct tag name in publish workflow ([4ce2b5e](https://github.com/rioam2/nrktv-dual-subs/commit/4ce2b5e8383c385ef93d217292bdebede63b881f))
+
 ## [1.4.1](https://github.com/rioam2/nrktv-dual-subs/compare/nrktv-dual-subs/v1.4.0...nrktv-dual-subs/v1.4.1) (2025-04-03)
 
 
