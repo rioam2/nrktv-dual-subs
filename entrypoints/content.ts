@@ -20,13 +20,19 @@ export default defineContentScript({
       subtitleContainer.style.left = '0%';
     }
 
+    function hideOriginalSubtitle() {
+      const subtitleContainer = document.querySelector('tv-player-subtitles div') as HTMLDivElement;
+      subtitleContainer.style.opacity = '0';
+    }
+
     function resetOriginalSubtitle() {
       const subtitleContainer = document.querySelector('tv-player-subtitles div') as HTMLDivElement;
       subtitleContainer.style.width = '100%';
+      subtitleContainer.style.opacity = '1';
       subtitleContainer.style.left = 'unset';
     }
 
-    function appendTranslatedSubtitle(content: string) {
+    function appendTranslatedSubtitle(content: string, width = '50%') {
       const subtitleContainer = document.querySelector('tv-player-subtitles div') as HTMLDivElement;
       const translateContainer = subtitleContainer.cloneNode(true) as HTMLDivElement;
       const translateSubtitleText = translateContainer.querySelector('.tv-player-subtitle-text') as HTMLSpanElement;
@@ -34,7 +40,7 @@ export default defineContentScript({
       translateSubtitleText.innerText = content;
       translateContainer.style.left = 'unset';
       translateContainer.style.right = '0%';
-      translateContainer.style.width = '50%';
+      translateContainer.style.width = width;
       translateContainer.style.opacity = '1';
       translateContainer.setAttribute('data-translated', 'true');
       subtitleContainer.parentElement?.appendChild(translateContainer);
@@ -73,11 +79,18 @@ export default defineContentScript({
     document.addEventListener('keydown', (e) => {
       if (e.key === ACTIVATION_KEY) {
         activationKeyPressed = true;
-        if (mode === TranslateMode.KeyPress) {
-          const video = document.querySelector('tv-player video') as HTMLVideoElement;
-          showTranslatedSubtitle();
-          video.pause();
-          video.focus();
+        const video = document.querySelector('tv-player video') as HTMLVideoElement;
+        switch (mode) {
+          case TranslateMode.KeyPress:
+            showTranslatedSubtitle();
+            video.pause();
+            video.focus();
+            break;
+          case TranslateMode.TranslationOnly:
+            hideTranslatedSubtitle();
+            video.pause();
+            video.focus();
+            break;
         }
       }
     });
@@ -85,11 +98,19 @@ export default defineContentScript({
     document.addEventListener('keyup', (e) => {
       if (e.key === ACTIVATION_KEY) {
         activationKeyPressed = false;
-        if (mode === TranslateMode.KeyPress) {
-          const video = document.querySelector('tv-player video') as HTMLVideoElement;
-          hideTranslatedSubtitle();
-          video.play();
-          video.focus();
+        const video = document.querySelector('tv-player video') as HTMLVideoElement;
+        switch (mode) {
+          case TranslateMode.KeyPress:
+            hideTranslatedSubtitle();
+            video.play();
+            video.focus();
+            break;
+          case TranslateMode.TranslationOnly:
+            hideOriginalSubtitle();
+            showTranslatedSubtitle();
+            video.play();
+            video.focus();
+            break;
         }
       }
     });
@@ -114,6 +135,17 @@ export default defineContentScript({
           removeTranslatedSubtitle();
           appendTranslatedSubtitle(translation);
           if (!activationKeyPressed) hideTranslatedSubtitle();
+          break;
+        }
+        case TranslateMode.TranslationOnly: {
+          hideOriginalSubtitle();
+          const translation = await translateSubtitle(subtitle);
+          appendTranslatedSubtitle(translation, '100%');
+          showTranslatedSubtitle();
+          if (activationKeyPressed) {
+            hideTranslatedSubtitle();
+            resetOriginalSubtitle();
+          }
           break;
         }
         case TranslateMode.Disabled: {

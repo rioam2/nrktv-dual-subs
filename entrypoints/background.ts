@@ -25,22 +25,19 @@ export default defineBackground(() => {
     throw new Error('Unknown response format');
   }
 
-  browser.runtime.onMessage.addListener(async (message: ExtensionMessage, sender, sendResponse) => {
+  browser.runtime.onMessage.addListener((message: ExtensionMessage, sender, sendResponse) => {
     switch (message.action) {
       case ExtensionMessageAction.Translate:
-        try {
-          const { text, source_lang, target_lang } = message.payload;
-          const translation = await getTranslation(text, source_lang, target_lang);
-          return {
-            error: null,
-            response: translation
-          };
-        } catch (e) {
-          return {
-            error: e,
-            response: null
-          };
-        }
+        (async () => {
+          try {
+            const { text, source_lang, target_lang } = message.payload;
+            const translation = await getTranslation(text, source_lang, target_lang);
+            sendResponse({ error: null, response: translation });
+          } catch (e) {
+            sendResponse({ error: e, response: null });
+          }
+        })();
+        return true;
     }
   });
 });
