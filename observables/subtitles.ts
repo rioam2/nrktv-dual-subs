@@ -1,8 +1,7 @@
+import { SUBTITLES_CONTAINER_QUERY_SELECTOR } from '@/constants/selectors';
 import { Observable } from 'rxjs';
 
 export const subtitles$ = new Observable<string[]>((subscriber) => {
-  const captionsContainerQuery = 'tv-player-subtitles';
-
   const subtitlesObserver = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
       Array.from(mutation.addedNodes ?? []).forEach((node) => {
@@ -21,7 +20,7 @@ export const subtitles$ = new Observable<string[]>((subscriber) => {
   const subtitleParentObserver = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
       const subtitlesContainer = Array.from(mutation.addedNodes ?? []).find(
-        (node) => node instanceof HTMLElement && node.matches(captionsContainerQuery)
+        (node) => node instanceof HTMLElement && node.matches(SUBTITLES_CONTAINER_QUERY_SELECTOR)
       );
       if (subtitlesContainer) {
         subtitlesObserver.observe(subtitlesContainer, {
