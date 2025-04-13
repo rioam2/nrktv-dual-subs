@@ -24,6 +24,9 @@ importers:
       '@types/react-dom':
         specifier: ^19.1.0
         version: 19.1.1(@types/react@19.1.0)
+      typescript:
+        specifier: ^5.8.3
+        version: 5.8.3
       wxt:
         specifier: ^0.20.0
         version: 0.20.0(@types/node@20.14.2)(rollup@4.18.0)
@@ -2061,6 +2064,11 @@ packages:
 
   typedarray@0.0.6:
     resolution: {integrity: sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==}
+
+  typescript@5.8.3:
+    resolution: {integrity: sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ==}
+    engines: {node: '>=14.17'}
+    hasBin: true
 
   ufo@1.5.3:
     resolution: {integrity: sha512-Y7HYmWaFwPUmkoQCUIAYpKqkOf+SbVj/2fJJZ4RJMCfZp0rTGwRbzQD+HghfnhKOjL9E01okqz+ncJskGYfBNw==}
@@ -4148,6 +4156,8 @@ snapshots:
       is-typedarray: 1.0.0
 
   typedarray@0.0.6: {}
+
+  typescript@5.8.3: {}
 
   ufo@1.5.3: {}
 
