@@ -1,8 +1,9 @@
 import { TranslateMode } from '@/types/TranslateMode';
 import { Observable } from 'rxjs';
-import { StorageItemKey } from 'wxt/storage';
+import { StorageItemKey } from '@wxt-dev/storage';
+import { SYNC_KEY_SETTINGS_ACTIVATION_KEY, SYNC_KEY_SETTINGS_LANGUAGE, SYNC_KEY_SETTINGS_MODE } from '@/constants/sync';
 
-const createSettingsObservable = <T extends unknown>(key: StorageItemKey, defaultValue: T): Observable<T> => {
+const createSettingsObservable = <T>(key: StorageItemKey, defaultValue: T): Observable<T> => {
   return new Observable<T>((subscriber) => {
     (async () => {
       const currentValue = (await storage.getItem<T>(key)) ?? defaultValue;
@@ -17,6 +18,7 @@ const createSettingsObservable = <T extends unknown>(key: StorageItemKey, defaul
 };
 
 export const settings$ = {
-  language: createSettingsObservable('sync:settings-language', 'en'),
-  mode: createSettingsObservable('sync:settings-mode', TranslateMode.Enabled)
+  language: createSettingsObservable(SYNC_KEY_SETTINGS_LANGUAGE, 'en'),
+  mode: createSettingsObservable(SYNC_KEY_SETTINGS_MODE, TranslateMode.Enabled),
+  activationKey: createSettingsObservable(SYNC_KEY_SETTINGS_ACTIVATION_KEY, 't')
 };
