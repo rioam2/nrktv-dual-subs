@@ -1,48 +1,36 @@
-import { SUBTITLES_CONTAINER_QUERY_SELECTOR } from '@/constants/selectors';
-import { Observable } from 'rxjs';
+import { SUBTITLE_WRAPPER_QUERY_SELECTOR } from '@/constants/selectors';
+import { distinctUntilChanged, map, Observable } from 'rxjs';
 
-export const subtitles$ = new Observable<string[]>((subscriber) => {
+export const subtitles$ = new Observable<string>((subscriber) => {
   const subtitlesObserver = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
-      Array.from(mutation.addedNodes ?? []).forEach((node) => {
-        node instanceof HTMLElement &&
-          node.getAttribute('data-translated') !== 'true' &&
-          subscriber.next(
-            node.innerText
-              .split('\n')
-              .map((line) => line.trim())
-              .filter((line) => !!line)
-          );
+      mutation.addedNodes.forEach((node) => {
+        // Ensure that the added node is a subtitle and has not already been translated
+        if (!(node instanceof HTMLElement)) return;
+        if (!node.matches(SUBTITLE_WRAPPER_QUERY_SELECTOR)) return;
+        if (node.matches('[data-translated]')) return;
+        subscriber.next(node.innerText);
       });
     });
   });
 
-  const subtitleParentObserver = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-      const subtitlesContainer = Array.from(mutation.addedNodes ?? []).find(
-        (node) => node instanceof HTMLElement && node.matches(SUBTITLES_CONTAINER_QUERY_SELECTOR)
-      );
-      if (subtitlesContainer) {
-        subtitlesObserver.observe(subtitlesContainer, {
-          childList: true,
-          subtree: true,
-          attributes: false,
-          characterData: false
-        });
-        subtitleParentObserver.disconnect();
-      }
-    });
-  });
-
-  subtitleParentObserver.observe(document, {
+  subtitlesObserver.observe(document, {
     childList: true,
     subtree: true,
     attributes: false,
     characterData: false
   });
 
-  return () => {
-    subtitlesObserver.disconnect();
-    subtitleParentObserver.disconnect();
-  };
-});
+  return () => subtitlesObserver.disconnect();
+})
+  // Don't fire duplicate subtitle events
+  .pipe(distinctUntilChanged())
+  // Transform the subtitle into trimmed lines
+  .pipe(
+    map((text) =>
+      text
+        .split('\n')
+        .map((line) => line.trim())
+        .filter((line) => !!line)
+    )
+  );
