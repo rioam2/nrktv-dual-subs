@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.5.0](https://github.com/rioam2/nrktv-dual-subs/compare/nrktv-dual-subs/v1.4.2...nrktv-dual-subs/v1.5.0) (2025-04-14)
+
+
+### Features
+
+* improved UX for settings menu integration ([#12](https://github.com/rioam2/nrktv-dual-subs/issues/12)) ([f74e0c1](https://github.com/rioam2/nrktv-dual-subs/commit/f74e0c11d5e63d455489775212bf152007e59db0))
+
+
+### Bug Fixes
+
+* simplify & reduce flakeyness of subtitle observer ([#14](https://github.com/rioam2/nrktv-dual-subs/issues/14)) ([8db6a6a](https://github.com/rioam2/nrktv-dual-subs/commit/8db6a6a6f8f616bf00b6dc5abdb33b6e7b5f827e))
+
 ## [1.4.2](https://github.com/rioam2/nrktv-dual-subs/compare/nrktv-dual-subs/v1.4.1...nrktv-dual-subs/v1.4.2) (2025-04-03)
 
 
