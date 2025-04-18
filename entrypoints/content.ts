@@ -143,6 +143,9 @@ export default defineContentScript({
     });
 
     subtitles$.forEach(async (subtitle) => {
+      // Clean up previous subtitles
+      removeTranslatedSubtitle();
+
       switch (mode) {
         case TranslateMode.Enabled: {
           shiftOriginalSubtitle();
