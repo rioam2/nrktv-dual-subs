@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.1](https://github.com/rioam2/nrktv-dual-subs/compare/nrktv-dual-subs/v1.5.0...nrktv-dual-subs/v1.5.1) (2025-04-18)
+
+
+### Bug Fixes
+
+* subtitles not being translated when seeking and paused ([3ee692b](https://github.com/rioam2/nrktv-dual-subs/commit/3ee692b2bfea6e9cbfa5503608d1a9da8fd328e9))
+
 ## [1.5.0](https://github.com/rioam2/nrktv-dual-subs/compare/nrktv-dual-subs/v1.4.2...nrktv-dual-subs/v1.5.0) (2025-04-14)
 
 
