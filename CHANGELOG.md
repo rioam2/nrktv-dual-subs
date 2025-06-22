@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.5.2](https://github.com/rioam2/nrktv-dual-subs/compare/nrktv-dual-subs/v1.5.1...nrktv-dual-subs/v1.5.2) (2025-06-22)
+
+
+### Bug Fixes
+
+* correctly load settings into new nrk design ([#17](https://github.com/rioam2/nrktv-dual-subs/issues/17)) ([e598b72](https://github.com/rioam2/nrktv-dual-subs/commit/e598b72f86c8c2db5b282dad4823b76291d02080))
+* correctly load settings into new nrk modal design ([e598b72](https://github.com/rioam2/nrktv-dual-subs/commit/e598b72f86c8c2db5b282dad4823b76291d02080))
+
 ## [1.5.1](https://github.com/rioam2/nrktv-dual-subs/compare/nrktv-dual-subs/v1.5.0...nrktv-dual-subs/v1.5.1) (2025-04-18)
 
 
