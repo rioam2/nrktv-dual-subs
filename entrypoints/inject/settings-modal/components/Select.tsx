@@ -2,6 +2,7 @@ export const Select: React.FC<React.SelectHTMLAttributes<HTMLSelectElement>> = (
   return (
     <select
       className="nrk-input"
+      {...props}
       style={{
         width: '100%',
         backgroundColor: 'transparent',
@@ -17,9 +18,9 @@ export const Select: React.FC<React.SelectHTMLAttributes<HTMLSelectElement>> = (
         backgroundPositionX: 'calc(100% - 1.35em), calc(100% - 1em)',
         backgroundPositionY: 0,
         WebkitAppearance: 'none',
-        MozAppearance: 'none'
+        MozAppearance: 'none',
+        ...props.style // Allow overriding styles
       }}
-      {...props}
     >
       {props.children}
     </select>
