@@ -43,7 +43,7 @@ export const Settings: React.FC = () => {
       className="display-flex position-relative flex-direction-column"
     >
       <div className="display-flex padding-x-m">
-        <p style={{ marginBottom: '0.5em' }}>
+        <p style={{ marginBottom: '0.5em', color: 'rgb(var(--color-theme-white))' }}>
           Translated subtitles by{'  '}
           <Link href="https://github.com/rioam2/nrktv-dual-subs">
             nrktv-dual-subs
@@ -68,7 +68,12 @@ export const Settings: React.FC = () => {
       </TabList>
       {currentMode === TranslateMode.KeyPress && (
         <div className="padding-x-m">
-          <Select value={currentActivationKey} onChange={handleActivationKeyChange}>
+          <Select
+            name="activation-key-select"
+            value={currentActivationKey}
+            onChange={handleActivationKeyChange}
+            style={{ color: 'rgb(var(--color-theme-white))' }}
+          >
             {Array.from({ length: 26 }).map((_, idx) => {
               const charCode = 65 + idx;
               const char = String.fromCharCode(charCode).toLowerCase();
@@ -83,7 +88,12 @@ export const Settings: React.FC = () => {
       )}
       {currentMode !== TranslateMode.Disabled && (
         <div className="padding-x-m">
-          <Select value={currentLanguage} onChange={handleLanguageChange}>
+          <Select
+            name="language-select"
+            value={currentLanguage}
+            onChange={handleLanguageChange}
+            style={{ color: 'rgb(var(--color-theme-white))' }}
+          >
             {LANGUAGES.map((lang) => (
               <option key={lang.value} value={lang.value}>
                 {lang.name}

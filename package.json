@@ -21,7 +21,7 @@
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
     "typescript": "^5.8.3",
-    "wxt": "^0.20.0"
+    "wxt": "^0.20.7"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.7",
