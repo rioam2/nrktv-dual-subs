@@ -76,18 +76,17 @@ export default defineContentScript({
       shiftOriginalSubtitle();
     }
 
-    async function getBuiltinTranslatorApi(targetLanguage?: string) {
-      if (!('Translator' in self) || !self.Translator || !targetLanguage) {
+    async function getBuiltinTranslatorApi(options: TranslatorOptions) {
+      if (!('Translator' in self) || !self.Translator) {
         return null;
       }
-      const translatorOptions = { sourceLanguage: 'no', targetLanguage };
-      const translatorCapabilities = await self.Translator.availability(translatorOptions);
+      const translatorCapabilities = await self.Translator.availability(options);
       switch (translatorCapabilities) {
         case 'available':
-          return await self.Translator.create(translatorOptions);
+          return await self.Translator.create(options);
         case 'downloadable':
-          // Trigger model download for next time (don't await)
-          self.Translator.create(translatorOptions);
+          // Trigger model download for next time (optimistic, don't await or care about result)
+          self.Translator.create(options).catch(() => {});
           return null;
         default:
           return null;
@@ -95,7 +94,10 @@ export default defineContentScript({
     }
 
     async function translateSubtitleUsingBuiltinApi(subtitle: string[]): Promise<string> {
-      const translatorApi = await getBuiltinTranslatorApi(language);
+      const translatorApi = await getBuiltinTranslatorApi({
+        sourceLanguage: 'no',
+        targetLanguage: language || 'en'
+      });
       if (translatorApi) {
         const translatedLines = await Promise.all(subtitle.map((line) => translatorApi.translate(line)));
         return translatedLines.join('\n');

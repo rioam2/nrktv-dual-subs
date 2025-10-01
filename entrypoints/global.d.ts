@@ -1,11 +1,9 @@
-interface TranslatorOptions {
-  sourceLanguage: string;
-  targetLanguage: string;
-}
-
-type TranslatorAvailability = 'available' | 'downloadable' | 'unknown';
-
 declare global {
+  interface TranslatorOptions {
+    sourceLanguage: string;
+    targetLanguage: string;
+  }
+  type TranslatorAvailability = 'available' | 'downloadable' | 'unknown';
   interface Window {
     Translator?: {
       availability(options: TranslatorOptions): Promise<TranslatorAvailability>;
