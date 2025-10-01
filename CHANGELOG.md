@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.0](https://github.com/rioam2/nrktv-dual-subs/compare/nrktv-dual-subs/v1.5.2...nrktv-dual-subs/v1.6.0) (2025-10-01)
+
+
+### Features
+
+* add Chrome translator API as a fallback ([#19](https://github.com/rioam2/nrktv-dual-subs/issues/19)) ([e6e10af](https://github.com/rioam2/nrktv-dual-subs/commit/e6e10af752803c7278a4d964cd293ddf3087bdbd))
+
 ## [1.5.2](https://github.com/rioam2/nrktv-dual-subs/compare/nrktv-dual-subs/v1.5.1...nrktv-dual-subs/v1.5.2) (2025-06-22)
 
 
