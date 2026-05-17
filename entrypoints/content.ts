@@ -16,10 +16,33 @@ export default defineContentScript({
   allFrames: true,
   runAt: 'document_start',
   async main() {
+    const TRANSLATION_CACHE_LIMIT = 100;
+    const TRANSLATION_PREFETCH_AHEAD = 3;
+
     let mode: TranslateMode | undefined;
     let language: string | undefined;
     let activationKey: string | undefined;
     let activationKeyPressed = false;
+    let subtitleRequestId = 0;
+
+    const translationCache = new Map<string, string>();
+    const translationInFlight = new Map<string, Promise<string>>();
+
+    function subtitleToKey(subtitle: string[]): string {
+      return subtitle.join('\n');
+    }
+
+    function rememberTranslation(key: string, translation: string) {
+      if (translationCache.has(key)) {
+        translationCache.delete(key);
+      }
+      translationCache.set(key, translation);
+
+      if (translationCache.size > TRANSLATION_CACHE_LIMIT) {
+        const oldest = translationCache.keys().next().value;
+        if (oldest) translationCache.delete(oldest);
+      }
+    }
 
     function shiftOriginalSubtitle() {
       const subtitleContainer = document.querySelector(SUBTITLE_WRAPPER_QUERY_SELECTOR) as HTMLDivElement;
@@ -128,6 +151,67 @@ export default defineContentScript({
       ]);
     }
 
+    function cueTextToSubtitle(cueText: string): string[] {
+      return cueText
+        .split('\n')
+        .map((line) => line.trim())
+        .filter((line) => !!line);
+    }
+
+    async function getOrCreateTranslation(subtitle: string[]): Promise<string> {
+      const key = subtitleToKey(subtitle);
+      const cached = translationCache.get(key);
+      if (cached) return cached;
+
+      const existingPromise = translationInFlight.get(key);
+      if (existingPromise) return await existingPromise;
+
+      const translationPromise = translateSubtitle(subtitle)
+        .then((translation) => {
+          rememberTranslation(key, translation);
+          return translation;
+        })
+        .finally(() => {
+          translationInFlight.delete(key);
+        });
+
+      translationInFlight.set(key, translationPromise);
+      return await translationPromise;
+    }
+
+    function prefetchUpcomingSubtitleTranslations() {
+      const video = document.querySelector(VIDEO_PLAYER_QUERY_SELECTOR) as HTMLVideoElement | null;
+      if (!video) return;
+
+      for (let trackIndex = 0; trackIndex < video.textTracks.length; trackIndex++) {
+        const track = video.textTracks[trackIndex];
+        const cues = track.cues;
+        if (!cues?.length) continue;
+
+        const activeCue = track.activeCues?.[0] ?? null;
+        let activeIndex = -1;
+
+        if (activeCue) {
+          for (let cueIndex = 0; cueIndex < cues.length; cueIndex++) {
+            if (cues[cueIndex] === activeCue) {
+              activeIndex = cueIndex;
+              break;
+            }
+          }
+        }
+
+        const startIndex = Math.max(activeIndex + 1, 0);
+        const endIndex = Math.min(startIndex + TRANSLATION_PREFETCH_AHEAD, cues.length);
+
+        for (let cueIndex = startIndex; cueIndex < endIndex; cueIndex++) {
+          const cue = cues[cueIndex] as TextTrackCue;
+          const cueSubtitle = cueTextToSubtitle((cue as VTTCue).text ?? '');
+          if (!cueSubtitle.length) continue;
+          void getOrCreateTranslation(cueSubtitle);
+        }
+      }
+    }
+
     document.addEventListener('keydown', (e) => {
       if (e.key === activationKey) {
         e.preventDefault();
@@ -172,7 +256,16 @@ export default defineContentScript({
     });
 
     // Listen for settings changes
-    settings$.language.forEach((newLanguage) => (language = newLanguage));
+    settings$.language.forEach((newLanguage) => {
+      if (language !== newLanguage) {
+        // Invalidate buffered translations so old language results never leak into new language mode.
+        translationCache.clear();
+        translationInFlight.clear();
+        subtitleRequestId++;
+        removeTranslatedSubtitle();
+      }
+      language = newLanguage;
+    });
     settings$.mode.forEach((newMode) => (mode = newMode));
     settings$.activationKey.forEach((newActivationKey) => (activationKey = newActivationKey));
 
@@ -182,23 +275,24 @@ export default defineContentScript({
     });
 
     subtitles$.forEach(async (subtitle) => {
-      // Clean up previous subtitles
-      removeTranslatedSubtitle();
+      const currentRequestId = ++subtitleRequestId;
+      prefetchUpcomingSubtitleTranslations();
 
       switch (mode) {
         case TranslateMode.Enabled: {
           shiftOriginalSubtitle();
-          appendTranslatedSubtitle('...');
-          const translation = await translateSubtitle(subtitle);
+          const translation = await getOrCreateTranslation(subtitle);
+          if (currentRequestId !== subtitleRequestId) return;
           removeTranslatedSubtitle();
           appendTranslatedSubtitle(translation);
           showTranslatedSubtitle();
           break;
         }
         case TranslateMode.KeyPress: {
-          appendTranslatedSubtitle('...');
+          removeTranslatedSubtitle();
           hideTranslatedSubtitle();
-          const translation = await translateSubtitle(subtitle);
+          const translation = await getOrCreateTranslation(subtitle);
+          if (currentRequestId !== subtitleRequestId) return;
           removeTranslatedSubtitle();
           appendTranslatedSubtitle(translation);
           if (!activationKeyPressed) hideTranslatedSubtitle();
@@ -206,7 +300,9 @@ export default defineContentScript({
         }
         case TranslateMode.TranslationOnly: {
           hideOriginalSubtitle();
-          const translation = await translateSubtitle(subtitle);
+          const translation = await getOrCreateTranslation(subtitle);
+          if (currentRequestId !== subtitleRequestId) return;
+          removeTranslatedSubtitle();
           appendTranslatedSubtitle(translation, '100%');
           showTranslatedSubtitle();
           if (activationKeyPressed) {
@@ -216,6 +312,8 @@ export default defineContentScript({
           break;
         }
         case TranslateMode.Disabled: {
+          removeTranslatedSubtitle();
+          resetOriginalSubtitle();
           break;
         }
       }
